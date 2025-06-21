@@ -1,0 +1,496 @@
+---
+import questionsData from '~/data/quiz/questions.json';
+import categoriesData from '~/data/quiz/categories.json';
+
+const questions = questionsData;
+const categories = categoriesData.categories;
+const difficulties = categoriesData.difficulties;
+---
+
+<div id="quiz-game" class="w-full">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-heading mb-4">Choose Your Quiz</h2>
+      <p class="text-muted">Select a category and difficulty level to begin</p>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Category</h3>
+        <div class="space-y-3">
+          {categories.map((cat) => (
+            <button 
+              class="w-full p-4 text-left border border-gray-300 rounded-lg hover:border-primary transition-colors quiz-category-btn bg-page"
+              data-category={cat.id}
+            >
+              <div class="flex items-center space-x-3">
+                <span class="text-2xl">{cat.icon}</span>
+                <div>
+                  <div class="font-medium text-default">{cat.name}</div>
+                  <div class="text-sm text-muted">{cat.description}</div>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="text-lg font-semibold mb-4">Difficulty</h3>
+        <div class="space-y-3">
+          {difficulties.map((diff) => (
+            <button 
+              class="w-full p-4 text-left border border-gray-300 rounded-lg hover:border-primary transition-colors quiz-difficulty-btn bg-page"
+              data-difficulty={diff.id}
+            >
+              <div>
+                <div class="font-medium text-default">{diff.name}</div>
+                <div class="text-sm text-muted">{diff.description}</div>
+                <div class="text-xs text-primary mt-1">{diff.points} points per question</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center">
+      <button 
+        id="start-quiz-btn"
+        class="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled
+      >
+        Start Quiz
+      </button>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ questions, categories, difficulties }}>
+  console.log('Quiz script loaded');
+  
+  // Global variables to track selections
+  let selectedCategory = null;
+  let selectedDifficulty = null;
+  let quizInstance = null;
+
+  // Helper function to find the closest element with a specific class
+  function findClosestElement(element, className) {
+    while (element && element !== document) {
+      if (element.classList && element.classList.contains(className)) {
+        return element;
+      }
+      element = element.parentElement;
+    }
+    return null;
+  }
+
+  class QuizGame {
+    constructor() {
+      this.questions = questions;
+      this.state = {
+        currentQuestion: 0,
+        score: 0,
+        answers: [],
+        category: '',
+        difficulty: '',
+        isStarted: false,
+        isFinished: false,
+        selectedAnswer: null,
+        showResult: false
+      };
+      this.currentQuestions = [];
+      this.init();
+    }
+
+    init() {
+      this.attachEventListeners();
+    }
+
+    attachEventListeners() {
+      document.addEventListener('quiz:start', (e) => {
+        this.startQuiz(e.detail.category, e.detail.difficulty);
+      });
+
+      document.addEventListener('quiz:answer', (e) => {
+        this.handleAnswer(e.detail.answerIndex);
+      });
+
+      document.addEventListener('quiz:next', () => {
+        this.nextQuestion();
+      });
+
+      document.addEventListener('quiz:restart', () => {
+        this.restart();
+      });
+    }
+
+    startQuiz(category, difficulty) {
+      this.state.category = category;
+      this.state.difficulty = difficulty;
+      this.state.isStarted = true;
+      this.state.currentQuestion = 0;
+      this.state.score = 0;
+      this.state.answers = [];
+      this.state.selectedAnswer = null;
+      this.state.showResult = false;
+
+      // Filter questions by category and difficulty
+      this.currentQuestions = this.questions
+        .filter(q => q.category === category && q.difficulty === difficulty)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 10);
+
+      this.render();
+    }
+
+    handleAnswer(answerIndex) {
+      if (this.state.selectedAnswer !== null) return;
+
+      this.state.selectedAnswer = answerIndex;
+      this.state.answers[this.state.currentQuestion] = answerIndex;
+
+      const currentQ = this.currentQuestions[this.state.currentQuestion];
+      if (answerIndex === currentQ.correctAnswer) {
+        this.state.score += 10;
+      }
+
+      this.state.showResult = true;
+      this.render();
+
+      setTimeout(() => {
+        this.nextQuestion();
+      }, 2000);
+    }
+
+    nextQuestion() {
+      this.state.showResult = false;
+      this.state.selectedAnswer = null;
+
+      if (this.state.currentQuestion < this.currentQuestions.length - 1) {
+        this.state.currentQuestion++;
+        this.render();
+      } else {
+        this.finishQuiz();
+      }
+    }
+
+    finishQuiz() {
+      this.state.isFinished = true;
+      this.render();
+    }
+
+    restart() {
+      this.state = {
+        currentQuestion: 0,
+        score: 0,
+        answers: [],
+        category: '',
+        difficulty: '',
+        isStarted: false,
+        isFinished: false,
+        selectedAnswer: null,
+        showResult: false
+      };
+      this.currentQuestions = [];
+      this.render();
+    }
+
+    render() {
+      const container = document.getElementById('quiz-game');
+      if (!container) return;
+
+      if (!this.state.isStarted) {
+        container.innerHTML = this.renderStartScreen();
+      } else if (this.state.isFinished) {
+        container.innerHTML = this.renderResultsScreen();
+      } else {
+        container.innerHTML = this.renderQuestionScreen();
+      }
+    }
+
+    renderStartScreen() {
+      return `
+        <div class="max-w-2xl mx-auto">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-heading mb-4">Choose Your Quiz</h2>
+            <p class="text-muted">Select a category and difficulty level to begin</p>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div>
+              <h3 class="text-lg font-semibold mb-4">Category</h3>
+              <div class="space-y-3">
+                ${categories.map(cat => `
+                  <button 
+                    class="w-full p-4 text-left border border-gray-300 rounded-lg hover:border-primary transition-colors quiz-category-btn bg-page"
+                    data-category="${cat.id}"
+                  >
+                    <div class="flex items-center space-x-3">
+                      <span class="text-2xl">${cat.icon}</span>
+                      <div>
+                        <div class="font-medium text-default">${cat.name}</div>
+                        <div class="text-sm text-muted">${cat.description}</div>
+                      </div>
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+            
+            <div>
+              <h3 class="text-lg font-semibold mb-4">Difficulty</h3>
+              <div class="space-y-3">
+                ${difficulties.map(diff => `
+                  <button 
+                    class="w-full p-4 text-left border border-gray-300 rounded-lg hover:border-primary transition-colors quiz-difficulty-btn bg-page"
+                    data-difficulty="${diff.id}"
+                  >
+                    <div>
+                      <div class="font-medium text-default">${diff.name}</div>
+                      <div class="text-sm text-muted">${diff.description}</div>
+                      <div class="text-xs text-primary mt-1">${diff.points} points per question</div>
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+          
+          <div class="text-center">
+            <button 
+              id="start-quiz-btn"
+              class="px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-secondary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled
+            >
+              Start Quiz
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    renderQuestionScreen() {
+      const question = this.currentQuestions[this.state.currentQuestion];
+      const progress = ((this.state.currentQuestion + 1) / this.currentQuestions.length) * 100;
+      
+      return `
+        <div class="max-w-2xl mx-auto">
+          <div class="mb-6">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-sm text-muted">Question ${this.state.currentQuestion + 1} of ${this.currentQuestions.length}</span>
+              <span class="text-sm font-medium text-default">Score: ${this.state.score}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-primary h-2 rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+            </div>
+          </div>
+          
+          <div class="bg-page border border-gray-300 rounded-lg p-6 mb-6">
+            <h3 class="text-xl font-semibold mb-6 text-default">${question.question}</h3>
+            
+            <div class="space-y-3">
+              ${question.options.map((option, index) => {
+                let classes = 'w-full p-4 text-left border rounded-lg transition-all duration-200 quiz-answer-btn';
+                
+                if (this.state.selectedAnswer !== null) {
+                  if (index === question.correctAnswer) {
+                    classes += ' bg-green-100 border-green-500 text-green-800';
+                  } else if (index === this.state.selectedAnswer && index !== question.correctAnswer) {
+                    classes += ' bg-red-100 border-red-500 text-red-800';
+                  } else {
+                    classes += ' opacity-50';
+                  }
+                } else {
+                  classes += ' hover:border-primary hover:bg-gray-50 bg-page border-gray-300 text-default';
+                }
+                
+                return `
+                  <button 
+                    class="${classes}"
+                    data-answer="${index}"
+                    ${this.state.selectedAnswer !== null ? 'disabled' : ''}
+                  >
+                    ${option}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+            
+            ${this.state.showResult && question.explanation ? `
+              <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="text-sm text-blue-800">
+                  <strong>Explanation:</strong> ${question.explanation}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    renderResultsScreen() {
+      const totalQuestions = this.currentQuestions.length;
+      const correctAnswers = this.state.answers.filter((answer, index) => 
+        answer === this.currentQuestions[index].correctAnswer
+      ).length;
+      const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+      
+      let message = '';
+      let emoji = '';
+      
+      if (percentage >= 90) {
+        message = 'Excellent! You\'re a quiz master!';
+        emoji = '🏆';
+      } else if (percentage >= 70) {
+        message = 'Great job! You know your stuff!';
+        emoji = '🎉';
+      } else if (percentage >= 50) {
+        message = 'Good effort! Keep learning!';
+        emoji = '👍';
+      } else {
+        message = 'Keep practicing! You\'ll get better!';
+        emoji = '💪';
+      }
+      
+      return `
+        <div class="max-w-2xl mx-auto text-center">
+          <div class="mb-8">
+            <div class="text-6xl mb-4">${emoji}</div>
+            <h2 class="text-3xl font-bold text-heading mb-2">Quiz Complete!</h2>
+            <p class="text-xl text-muted mb-6">${message}</p>
+          </div>
+          
+          <div class="bg-page border border-gray-300 rounded-lg p-6 mb-8">
+            <div class="grid grid-cols-2 gap-6">
+              <div class="text-center">
+                <div class="text-3xl font-bold text-primary">${this.state.score}</div>
+                <div class="text-sm text-muted">Total Score</div>
+              </div>
+              <div class="text-center">
+                <div class="text-3xl font-bold text-primary">${percentage}%</div>
+                <div class="text-sm text-muted">Accuracy</div>
+              </div>
+            </div>
+            
+            <div class="mt-6 pt-6 border-t border-gray-300">
+              <div class="flex justify-between items-center">
+                <span class="text-default">Correct Answers:</span>
+                <span class="font-semibold text-default">${correctAnswers} / ${totalQuestions}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-x-4">
+            <button 
+              class="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-secondary transition-colors quiz-restart-btn"
+            >
+              Play Again
+            </button>
+            <a 
+              href="/" 
+              class="px-6 py-3 border border-gray-300 text-default rounded-lg font-medium hover:border-primary hover:text-primary transition-colors bg-page"
+            >
+              Back to Home
+            </a>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // Initialize quiz when DOM is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing quiz');
+    quizInstance = new QuizGame();
+    
+    // Use event delegation for better reliability
+    document.addEventListener('click', (e) => {
+      const target = e.target;
+      console.log('Click event on:', target);
+      
+      // Handle category selection - find the closest category button
+      const categoryButton = findClosestElement(target, 'quiz-category-btn');
+      if (categoryButton) {
+        console.log('Category button clicked:', categoryButton.getAttribute('data-category'));
+        selectedCategory = categoryButton.getAttribute('data-category');
+        updateButtonStates();
+        checkStartButton();
+      }
+      
+      // Handle difficulty selection - find the closest difficulty button
+      const difficultyButton = findClosestElement(target, 'quiz-difficulty-btn');
+      if (difficultyButton) {
+        console.log('Difficulty button clicked:', difficultyButton.getAttribute('data-difficulty'));
+        selectedDifficulty = difficultyButton.getAttribute('data-difficulty');
+        updateButtonStates();
+        checkStartButton();
+      }
+      
+      // Handle start quiz button
+      if (target.id === 'start-quiz-btn') {
+        console.log('Start quiz clicked, category:', selectedCategory, 'difficulty:', selectedDifficulty);
+        if (selectedCategory && selectedDifficulty) {
+          document.dispatchEvent(new CustomEvent('quiz:start', {
+            detail: { category: selectedCategory, difficulty: selectedDifficulty }
+          }));
+        }
+      }
+      
+      // Handle answer selection
+      if (target.classList.contains('quiz-answer-btn') && !target.hasAttribute('disabled')) {
+        const answerIndex = parseInt(target.getAttribute('data-answer') || '0');
+        document.dispatchEvent(new CustomEvent('quiz:answer', {
+          detail: { answerIndex }
+        }));
+      }
+      
+      // Handle restart button
+      if (target.classList.contains('quiz-restart-btn')) {
+        selectedCategory = null;
+        selectedDifficulty = null;
+        document.dispatchEvent(new CustomEvent('quiz:restart'));
+      }
+    });
+    
+    function updateButtonStates() {
+      console.log('Updating button states, selectedCategory:', selectedCategory, 'selectedDifficulty:', selectedDifficulty);
+      
+      // Update category buttons
+      document.querySelectorAll('.quiz-category-btn').forEach(btn => {
+        const category = btn.getAttribute('data-category');
+        if (category === selectedCategory) {
+          btn.classList.add('border-primary', 'bg-primary/5');
+          console.log('Selected category button:', category);
+        } else {
+          btn.classList.remove('border-primary', 'bg-primary/5');
+        }
+      });
+      
+      // Update difficulty buttons
+      document.querySelectorAll('.quiz-difficulty-btn').forEach(btn => {
+        const difficulty = btn.getAttribute('data-difficulty');
+        if (difficulty === selectedDifficulty) {
+          btn.classList.add('border-primary', 'bg-primary/5');
+          console.log('Selected difficulty button:', difficulty);
+        } else {
+          btn.classList.remove('border-primary', 'bg-primary/5');
+        }
+      });
+    }
+    
+    function checkStartButton() {
+      const startBtn = document.getElementById('start-quiz-btn');
+      console.log('Checking start button, category:', selectedCategory, 'difficulty:', selectedDifficulty);
+      if (startBtn) {
+        if (selectedCategory && selectedDifficulty) {
+          startBtn.removeAttribute('disabled');
+          console.log('Start button enabled');
+        } else {
+          startBtn.setAttribute('disabled', 'disabled');
+          console.log('Start button disabled');
+        }
+      }
+    }
+  });
+</script> 

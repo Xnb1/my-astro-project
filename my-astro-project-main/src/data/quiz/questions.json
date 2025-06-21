@@ -1,0 +1,182 @@
+[
+  {
+    "id": "gen-1",
+    "category": "general",
+    "difficulty": "easy",
+    "question": "What is the capital of France?",
+    "options": ["London", "Berlin", "Paris", "Madrid"],
+    "correctAnswer": 2,
+    "explanation": "Paris is the capital and largest city of France."
+  },
+  {
+    "id": "gen-2",
+    "category": "general",
+    "difficulty": "easy",
+    "question": "Which planet is known as the Red Planet?",
+    "options": ["Venus", "Mars", "Jupiter", "Saturn"],
+    "correctAnswer": 1,
+    "explanation": "Mars is called the Red Planet due to its reddish appearance."
+  },
+  {
+    "id": "gen-3",
+    "category": "general",
+    "difficulty": "easy",
+    "question": "What is the largest ocean on Earth?",
+    "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    "correctAnswer": 3,
+    "explanation": "The Pacific Ocean is the largest and deepest ocean on Earth."
+  },
+  {
+    "id": "gen-4",
+    "category": "general",
+    "difficulty": "medium",
+    "question": "Who wrote 'Romeo and Juliet'?",
+    "options": ["Charles Dickens", "William Shakespeare", "Jane Austen", "Mark Twain"],
+    "correctAnswer": 1,
+    "explanation": "William Shakespeare wrote the famous tragedy 'Romeo and Juliet'."
+  },
+  {
+    "id": "gen-5",
+    "category": "general",
+    "difficulty": "medium",
+    "question": "What year did World War II end?",
+    "options": ["1943", "1944", "1945", "1946"],
+    "correctAnswer": 2,
+    "explanation": "World War II ended in 1945 with the surrender of Germany and Japan."
+  },
+  {
+    "id": "tech-1",
+    "category": "technology",
+    "difficulty": "easy",
+    "question": "What does CPU stand for?",
+    "options": ["Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Computer Processing Unit"],
+    "correctAnswer": 0,
+    "explanation": "CPU stands for Central Processing Unit, the main processor of a computer."
+  },
+  {
+    "id": "tech-2",
+    "category": "technology",
+    "difficulty": "easy",
+    "question": "Which company created the iPhone?",
+    "options": ["Samsung", "Apple", "Google", "Microsoft"],
+    "correctAnswer": 1,
+    "explanation": "Apple Inc. created and released the first iPhone in 2007."
+  },
+  {
+    "id": "tech-3",
+    "category": "technology",
+    "difficulty": "medium",
+    "question": "What does HTML stand for?",
+    "options": ["HyperText Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlink and Text Markup Language"],
+    "correctAnswer": 0,
+    "explanation": "HTML stands for HyperText Markup Language, used for creating web pages."
+  },
+  {
+    "id": "tech-4",
+    "category": "technology",
+    "difficulty": "medium",
+    "question": "Which programming language was created by Brendan Eich?",
+    "options": ["Python", "Java", "JavaScript", "C++"],
+    "correctAnswer": 2,
+    "explanation": "JavaScript was created by Brendan Eich at Netscape in 1995."
+  },
+  {
+    "id": "tech-5",
+    "category": "technology",
+    "difficulty": "hard",
+    "question": "What is the time complexity of binary search?",
+    "options": ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+    "correctAnswer": 1,
+    "explanation": "Binary search has a time complexity of O(log n) as it divides the search space in half each time."
+  },
+  {
+    "id": "science-1",
+    "category": "science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "options": ["Ag", "Au", "Fe", "Cu"],
+    "correctAnswer": 1,
+    "explanation": "Au is the chemical symbol for gold, from the Latin word 'aurum'."
+  },
+  {
+    "id": "science-2",
+    "category": "science",
+    "difficulty": "easy",
+    "question": "What is the hardest natural substance on Earth?",
+    "options": ["Steel", "Diamond", "Granite", "Iron"],
+    "correctAnswer": 1,
+    "explanation": "Diamond is the hardest natural substance known on Earth."
+  },
+  {
+    "id": "science-3",
+    "category": "science",
+    "difficulty": "medium",
+    "question": "What is the largest organ in the human body?",
+    "options": ["Heart", "Brain", "Liver", "Skin"],
+    "correctAnswer": 3,
+    "explanation": "The skin is the largest organ in the human body, covering about 20 square feet."
+  },
+  {
+    "id": "science-4",
+    "category": "science",
+    "difficulty": "medium",
+    "question": "What is the speed of light in a vacuum?",
+    "options": ["299,792 km/s", "199,792 km/s", "399,792 km/s", "499,792 km/s"],
+    "correctAnswer": 0,
+    "explanation": "The speed of light in a vacuum is approximately 299,792 kilometers per second."
+  },
+  {
+    "id": "science-5",
+    "category": "science",
+    "difficulty": "hard",
+    "question": "What is the atomic number of carbon?",
+    "options": ["4", "6", "8", "12"],
+    "correctAnswer": 1,
+    "explanation": "Carbon has an atomic number of 6, meaning it has 6 protons in its nucleus."
+  },
+  {
+    "id": "history-1",
+    "category": "history",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "options": ["Thomas Jefferson", "John Adams", "George Washington", "Benjamin Franklin"],
+    "correctAnswer": 2,
+    "explanation": "George Washington was the first President of the United States, serving from 1789 to 1797."
+  },
+  {
+    "id": "history-2",
+    "category": "history",
+    "difficulty": "easy",
+    "question": "In which year did Christopher Columbus discover America?",
+    "options": ["1490", "1492", "1495", "1500"],
+    "correctAnswer": 1,
+    "explanation": "Christopher Columbus discovered America in 1492, landing in the Bahamas."
+  },
+  {
+    "id": "history-3",
+    "category": "history",
+    "difficulty": "medium",
+    "question": "What was the name of the ship that sank on its maiden voyage in 1912?",
+    "options": ["Lusitania", "Titanic", "Britannic", "Olympic"],
+    "correctAnswer": 1,
+    "explanation": "The RMS Titanic sank on its maiden voyage from Southampton to New York City in 1912."
+  },
+  {
+    "id": "history-4",
+    "category": "history",
+    "difficulty": "medium",
+    "question": "Who was the first woman to win a Nobel Prize?",
+    "options": ["Marie Curie", "Mother Teresa", "Jane Addams", "Pearl S. Buck"],
+    "correctAnswer": 0,
+    "explanation": "Marie Curie was the first woman to win a Nobel Prize, receiving the Physics Prize in 1903."
+  },
+  {
+    "id": "history-5",
+    "category": "history",
+    "difficulty": "hard",
+    "question": "What year did the Berlin Wall fall?",
+    "options": ["1987", "1989", "1991", "1993"],
+    "correctAnswer": 1,
+    "explanation": "The Berlin Wall fell on November 9, 1989, marking the beginning of the end of the Cold War."
+  }
+] 

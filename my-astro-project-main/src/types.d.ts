@@ -5,7 +5,7 @@ export interface Post {
   /** A unique ID number that identifies a post. */
   id: string;
 
-  /** A post’s unique slug – part of the post’s URL based on its name, i.e. a post called “My Sample Page” has a slug “my-sample-page”. */
+  /** A post's unique slug – part of the post's URL based on its name, i.e. a post called "My Sample Page" has a slug "my-sample-page". */
   slug: string;
 
   /**  */
@@ -279,3 +279,40 @@ export interface Content extends Omit<Headline, 'classes'>, Widget {
 }
 
 export interface Contact extends Omit<Headline, 'classes'>, Form, Widget {}
+
+// Quiz Game Types
+export interface Question {
+  id: string;
+  category: string;
+  difficulty: 'easy' | 'medium' | 'hard';
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  explanation?: string;
+}
+
+export interface QuizState {
+  currentQuestion: number;
+  score: number;
+  answers: number[];
+  category: string;
+  difficulty: string;
+  isStarted: boolean;
+  isFinished: boolean;
+  selectedAnswer: number | null;
+  showResult: boolean;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+}
+
+export interface Difficulty {
+  id: string;
+  name: string;
+  description: string;
+  points: number;
+}

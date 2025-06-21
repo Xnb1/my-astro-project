@@ -1,0 +1,47 @@
+---
+import Layout from '~/layouts/Layout.astro';
+import QuizGame from '~/components/quiz/QuizGame.astro';
+
+import type { MetaData } from '~/types';
+
+export const metadata: MetaData = {
+  title: 'Quiz Game',
+  description: 'Test your knowledge with our interactive quiz game! Choose from multiple categories and difficulty levels.',
+  keywords: ['quiz', 'game', 'knowledge', 'interactive', 'fun'],
+  authors: [{ name: 'AstroWind' }],
+  creator: 'AstroWind',
+  openGraph: {
+    type: 'website',
+    title: 'Quiz Game - AstroWind',
+    description: 'Test your knowledge with our interactive quiz game!',
+    images: [{ url: '~/assets/images/default.png', width: 1200, height: 628 }],
+  },
+};
+---
+
+<Layout metadata={metadata}>
+  <main class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <!-- Hero Section -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold text-heading mb-4">
+          🎯 Quiz Game
+        </h1>
+        <p class="text-xl text-muted mb-8">
+          Test your knowledge with our interactive quiz! Choose your category and difficulty level to get started.
+        </p>
+        <div class="flex justify-center space-x-4">
+          <a 
+            href="/" 
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted hover:text-primary transition-colors"
+          >
+            ← Back to Home
+          </a>
+        </div>
+      </div>
+
+      <!-- Quiz Game Component -->
+      <QuizGame />
+    </div>
+  </main>
+</Layout> 

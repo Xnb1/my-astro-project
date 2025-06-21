@@ -1,0 +1,48 @@
+{
+  "categories": [
+    {
+      "id": "general",
+      "name": "General Knowledge",
+      "description": "Test your knowledge across various topics",
+      "icon": "🌍"
+    },
+    {
+      "id": "technology",
+      "name": "Technology",
+      "description": "Questions about computers, programming, and tech",
+      "icon": "💻"
+    },
+    {
+      "id": "science",
+      "name": "Science",
+      "description": "Explore the world of science and discovery",
+      "icon": "🔬"
+    },
+    {
+      "id": "history",
+      "name": "History",
+      "description": "Journey through time with historical facts",
+      "icon": "📚"
+    }
+  ],
+  "difficulties": [
+    {
+      "id": "easy",
+      "name": "Easy",
+      "description": "Basic questions for everyone",
+      "points": 10
+    },
+    {
+      "id": "medium",
+      "name": "Medium",
+      "description": "Moderate difficulty questions",
+      "points": 15
+    },
+    {
+      "id": "hard",
+      "name": "Hard",
+      "description": "Challenging questions for experts",
+      "points": 20
+    }
+  ]
+} 
